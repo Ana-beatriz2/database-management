@@ -1,0 +1,91 @@
+version: '3.2'
+
+services:
+  postgres-source-db:
+    hostname: postgres-source-db
+    container_name: postgres-source-db
+    image: postgres-source-db:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: postgres-source-db
+    environment:
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+      PGPORT: "5432"
+    ports:
+    - "6432:5432"
+    - "122:22"
+    volumes:
+      - type: bind
+        source: ./data/postgresql/pgdata
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ./data/postgresql/sshkeys
+        target: /tmp/.ssh
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=hot_standby"
+      - "-c"
+      - "port=5432"
+      - "-c"
+      - "hba_file=/var/lib/postgresql/config/pg_hba.conf"
+      - "-c"
+      - "archive_mode=on"
+      - "-c"
+      - "archive_command=rsync -a %p barman@pg-barman:/backup/barman/postgres-source-db/incoming/%f"
+      - "-c"
+      - "max_wal_senders=2"
+      - "-c"
+      - "max_replication_slots=2"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100k"
+        max-file: "5"
+    networks:
+      - spectre-network-test
+    restart: always
+
+
+  pg-barman:
+    hostname: pg-barman
+    container_name: pg-barman
+    image: pg-barman:latest
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      target: pg-barman
+    ports:
+    - "222:22"
+    volumes:
+      - type: bind
+        source: ./data/pgbarman/backupcfg
+        target: /etc/barman.d
+      - type: bind
+        source: ./data/pgbarman/backups
+        target: /backup/barman
+      - type: bind
+        source: ./data/pgbarman/log
+        target: /var/log/barman
+      - type: bind
+        source: ./data/pgbarman/sshkeys
+        target: /tmp/.ssh
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100k"
+        max-file: "5"
+    networks:
+      - spectre-network-test
+    restart: always
+
+
+networks:
+  spectre-network-test:
+    name: spectre-network-test
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 174.19.239.0/24
