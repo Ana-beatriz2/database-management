@@ -19,8 +19,8 @@ function configure(){
     ssh-keygen -f $(pwd)/data/pgbarman/sshkeys/id_rsa -y >> $(pwd)/data/postgresql/sshkeys/authorized_keys
     ssh-keygen -f $(pwd)/data/postgresql/sshkeys/id_rsa -y >> $(pwd)/data/pgbarman/sshkeys/authorized_keys
 
-    chmod -R 600 $(pwd)/data/postgresql/sshkeys/*
-    chmod -R 600 $(pwd)/data/pgbarman/sshkeys/*
+    chmod -R 755 $(pwd)/data/postgresql/sshkeys/*
+    chmod -R 755 $(pwd)/data/pgbarman/sshkeys/*
 
     cp Barman/postgres-source-db.conf $(pwd)/data/pgbarman/backupcfg/.
 }
