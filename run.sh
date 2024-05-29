@@ -4,16 +4,16 @@ function configure(){
     BASE_DIR=$(pwd)/data
 
     # Criando diretórios com permissões apropriadas
-    mkdir -m 700 -p "$BASE_DIR/postgresql/pgdata"
-    mkdir -m 777 -p "$BASE_DIR/postgresql/sshkeys"
-    chmod 777 "$BASE_DIR/postgresql/sshkeys"
+    mkdir -m 755 -p "$BASE_DIR/postgresql/pgdata"
+    mkdir -m 755 -p "$BASE_DIR/postgresql/sshkeys"
+    chmod 755 "$BASE_DIR/postgresql/sshkeys"
     
-    mkdir -m 777 -p "$BASE_DIR/pgbarman/sshkeys"
-    chmod 777 "$BASE_DIR/pgbarman/sshkeys"
+    mkdir -m 755 -p "$BASE_DIR/pgbarman/sshkeys"
+    chmod 755 "$BASE_DIR/pgbarman/sshkeys"
     
-    mkdir -m 700 -p "$BASE_DIR/pgbarman/log"
-    mkdir -m 700 -p "$BASE_DIR/pgbarman/backupcfg"
-    mkdir -m 700 -p "$BASE_DIR/pgbarman/backups"
+    mkdir -m 755 -p "$BASE_DIR/pgbarman/log"
+    mkdir -m 755 -p "$BASE_DIR/pgbarman/backupcfg"
+    mkdir -m 755 -p "$BASE_DIR/pgbarman/backups"
 
     #chmod -R 600 "$BASE_DIR/postgresql/sshkeys"
     #chmod -R 600 "$BASE_DIR/pgbarman/sshkeys"
@@ -78,11 +78,11 @@ function drop_hard(){
 }
 
 function populate(){
-    docker exec postgres-source-db psql -U dbadmin -d 'db' -p 5432 -c "$(cat ./Postgres/populate_primary_db.sql)";
+    docker exec postgres-source-db psql -U dbadmin -d 'db' -p 5432 -c "$(cat ./Postgres/populate_legal-sector_db.sql)";
 }
 
 function seed(){
-    docker exec postgres-source-db psql -U dbadmin -d 'db' -p 5432 -c "$(cat ./Postgres/populate_primary_db2.sql)";
+    docker exec postgres-source-db psql -U dbadmin -d 'db' -p 5432 -c "$(cat ./Postgres/populate_legal-sector_db2.sql)";
 }
 
 $1
