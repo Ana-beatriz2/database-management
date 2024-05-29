@@ -1,0 +1,1 @@
+/usr/lib/postgresql/14/bin/postgres "-c" "wal_level=hot_standby" "-c" "port=5432" "-c" "hba_file=/var/lib/postgresql/config/pg_hba.conf" "-c" "archive_mode=on" "-c" "archive_command=rsync -a %p barman@pg-barman:/backup/barman/postgres-source-db/incoming/%f" "-c" "max_wal_senders=2" "-c" "max_replication_slots=2"
