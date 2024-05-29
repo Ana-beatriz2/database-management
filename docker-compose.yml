@@ -1,5 +1,20 @@
 version: '3.2'
 
+networks:
+  spectre-network-test:
+    name: spectre-network-test
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 174.19.239.0/24
+
+
+volumes:
+  pg-data:
+    name: postgres-source-db-pgdata
+    driver: local
+
 services:
   postgres-source-db:
     hostname: postgres-source-db
@@ -16,8 +31,8 @@ services:
     - "6432:5432"
     - "122:22"
     volumes:
-      - type: bind
-        source: ./data/postgresql/pgdata
+      - type: volume
+        source: pg-data
         target: /var/lib/postgresql/data
       - type: bind
         source: ./data/postgresql/sshkeys
@@ -80,12 +95,3 @@ services:
       - spectre-network-test
     restart: always
 
-
-networks:
-  spectre-network-test:
-    name: spectre-network-test
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: 174.19.239.0/24

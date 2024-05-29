@@ -104,3 +104,18 @@ Após iniciar os containers pela primeira vez pode haver a necessidade de import
 docker exec pg-barman barman switch-wal --force --archive all;
 ```
 
+Para utilizar no WSL. Abra o arquivo /etc/wsl.conf no seu editor de texto preferido:
+```bash
+sudo nano /etc/wsl.conf
+```
+Adicione ou edite as seguintes linhas:
+```bash
+[automount]
+options = "metadata,umask=22,fmask=11"
+```
+
+Reinicie o WSL:
+```bash
+wsl --shutdown
+wsl
+```
